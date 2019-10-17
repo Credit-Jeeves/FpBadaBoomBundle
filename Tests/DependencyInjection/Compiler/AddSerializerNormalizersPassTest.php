@@ -82,23 +82,17 @@ class AddSerializerNormalizersPassTest extends \PHPUnit_Framework_TestCase
 
     protected function createContainerBuilderMock()
     {
-        return $this->getMock(
+        return $this->createPartialMock(
             'Symfony\Component\DependencyInjection\ContainerBuilder',
-            array('findTaggedServiceIds', 'getDefinition'),
-            array(),
-            '',
-            false
+            array('findTaggedServiceIds', 'getDefinition')
         );
     }
 
     protected function createDefinitionMock()
     {
-        return $this->getMock(
+        return $this->createPartialMock(
             'Symfony\Component\DependencyInjection\Definition',
-            array('replaceArgument'),
-            array(),
-            '',
-            false
+            array('replaceArgument')
         );
     }
 }

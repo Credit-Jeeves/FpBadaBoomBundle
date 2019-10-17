@@ -1,7 +1,7 @@
 <?php
 namespace Fp\BadaBoomBundle\Bridge\UniversalErrorCatcher;
 
-use Symfony\Component\ClassLoader\DebugUniversalClassLoader;
+use Symfony\Component\Debug\DebugClassLoader;
 
 use Fp\BadaBoomBundle\ExceptionCatcher\ExceptionCatcherInterface;
 use BadaBoom\ChainNode\ChainNodeInterface;
@@ -38,7 +38,7 @@ class ExceptionCatcher extends \UniversalErrorCatcher_Catcher implements Excepti
         if ($debug) {
             ini_set('display_errors', 1);
             error_reporting(-1);
-            DebugUniversalClassLoader::enable();
+            DebugClassLoader::enable();
             $this->setThrowRecoverableErrors(true);
         } else {
             ini_set('display_errors', 0);

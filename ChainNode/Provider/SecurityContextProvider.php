@@ -1,7 +1,7 @@
 <?php
 namespace Fp\BadaBoomBundle\ChainNode\Provider;
 
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 use BadaBoom\ChainNode\Provider\AbstractProvider;
@@ -13,7 +13,7 @@ class SecurityContextProvider extends AbstractProvider
 
     protected $sectionName;
 
-    public function __construct(SecurityContextInterface $securityContext = null, $sectionName = 'security')
+    public function __construct(TokenStorageInterface $securityContext = null, $sectionName = 'security')
     {
         $this->securityContext = $securityContext;
 

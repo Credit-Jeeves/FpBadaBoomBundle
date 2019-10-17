@@ -109,7 +109,7 @@ class SessionProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function createSessionMock()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
+        return $this->createMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
     }
 
     /**
@@ -117,7 +117,10 @@ class SessionProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function createContextMock()
     {
-        return $this->getMock('BadaBoom\Context', array(), array(new \Exception));
+        return $this
+            ->getMockBuilder('BadaBoom\Context')
+            ->setConstructorArgs(array(new \Exception))
+            ->getMock();
     }
 
     /**
@@ -125,6 +128,6 @@ class SessionProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function createChainNodeMock()
     {
-        return $this->getMock('BadaBoom\ChainNode\ChainNodeInterface');
+        return $this->createMock('BadaBoom\ChainNode\ChainNodeInterface');
     }
 }

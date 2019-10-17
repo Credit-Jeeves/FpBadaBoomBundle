@@ -82,8 +82,6 @@ class FpBadaBoomBundle extends Bundle
     
     public function boot()
     {
-        $this->container->set('fp_badaboom', $this);
-        
         /** @var $exceptionCatcher ExceptionCatcherInterface */
         $exceptionCatcher = $this->container->get('fp_badaboom.exception_catcher');
         /** @var $chainNodeManager ChainNodeManagerInterface */

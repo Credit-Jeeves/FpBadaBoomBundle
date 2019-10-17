@@ -77,6 +77,9 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
     protected function createContextMock()
     {
-        return $this->getMock('BadaBoom\Context', array(), array(new \Exception));
+        return $this
+            ->getMockBuilder('BadaBoom\Context')
+            ->setConstructorArgs(array(new \Exception))
+            ->getMock();
     }
 }
