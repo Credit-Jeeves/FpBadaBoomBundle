@@ -23,7 +23,7 @@ class ExceptionCatcher extends \UniversalErrorCatcher_Catcher implements Excepti
         
         $this->chainNodes[] = $chainNode;
         
-        $this->registerCallback(function(\Exception $e) use ($chainNode) {
+        $this->registerCallback(function(\Throwable $e) use ($chainNode) {
             $chainNode->handle(new Context($e));
         });
     }
