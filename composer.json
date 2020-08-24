@@ -5,6 +5,12 @@
     "keywords": ["Error", "Exception"],
     "homepage": "https://github.com/formapro/FpBadaBoomBundle",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:Credit-Jeeves/BadaBoom.git"
+        }
+    ],
     "authors": [
 	{
             "name": "Vadim Tyukov",
@@ -17,12 +23,12 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "fp/badaboom": "dev-not-approved",
-        "symfony/symfony": ">=2.0,<2.3"
+        "fp/badaboom": "dev-ton",
+        "symfony/symfony": "^4.0"
     },
     "require-dev": {
         "fp/fumocker": "1.0.*",
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "^5.0"
     },
     "suggest": {
         "fp/universal-error-catcher": "As exceptions and recoverable\fatal errors catcher."  

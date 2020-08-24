@@ -226,16 +226,19 @@ class RequestProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function createContextMock()
     {
-        return $this->getMock('BadaBoom\Context', array(), array(new \Exception));
+        return $this
+            ->getMockBuilder('BadaBoom\Context')
+            ->setConstructorArgs(array(new \Exception))
+            ->getMock();
     }
 
     protected function createGetResponseEvent()
     {
-        return $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false);
+        return $this->createMock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
     }
 
     protected function createChainNodeMock()
     {
-        return $this->getMock('BadaBoom\ChainNode\ChainNodeInterface');
+        return $this->createMock('BadaBoom\ChainNode\ChainNodeInterface');
     }
 }

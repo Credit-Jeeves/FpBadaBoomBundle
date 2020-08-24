@@ -20,7 +20,7 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function couldBeConstructedWithSecurityContextAsArgument()
     {
-        new SecurityContextProvider($this->createSecurityContextMock());
+        new SecurityContextProvider($this->createTokenStorageMock());
     }
 
     /**
@@ -28,7 +28,7 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldDoNothingIfContextNotHaveToken()
     {
-        $chain = new SecurityContextProvider($this->createSecurityContextMock());
+        $chain = new SecurityContextProvider($this->createTokenStorageMock());
 
         $contextMock = $this->createContextMock();
         $contextMock
@@ -46,7 +46,7 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
     {
         $context = new Context(new \Exception);
 
-        $chain = new SecurityContextProvider($this->createSecurityContextMock());
+        $chain = new SecurityContextProvider($this->createTokenStorageMock());
 
         $nextChainNodeMock = $this->createChainNodeMock();
         $nextChainNodeMock
@@ -78,7 +78,7 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($expectedUser))
         ;
 
-        $securityContextMock = $this->createSecurityContextMock();
+        $securityContextMock = $this->createTokenStorageMock();
         $securityContextMock
             ->expects($this->once())
             ->method('getToken')
@@ -115,7 +115,7 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($expectedUser))
         ;
 
-        $securityContextMock = $this->createSecurityContextMock();
+        $securityContextMock = $this->createTokenStorageMock();
         $securityContextMock
             ->expects($this->once())
             ->method('getToken')
@@ -162,7 +162,7 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($expectedUser))
         ;
 
-        $securityContextMock = $this->createSecurityContextMock();
+        $securityContextMock = $this->createTokenStorageMock();
         $securityContextMock
             ->expects($this->once())
             ->method('getToken')
@@ -199,7 +199,7 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($expectedUser))
         ;
 
-        $securityContextMock = $this->createSecurityContextMock();
+        $securityContextMock = $this->createTokenStorageMock();
         $securityContextMock
             ->expects($this->once())
             ->method('getToken')
@@ -220,28 +220,31 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
         $chain->handle($contextMock);
     }
 
-    protected function createSecurityContextMock()
+    protected function createTokenStorageMock()
     {
-        return $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
+        return $this->createMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
     }
 
     protected function createTokenMock()
     {
-        return $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        return $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
     }
 
     protected function createChainNodeMock()
     {
-        return $this->getMock('BadaBoom\ChainNode\ChainNodeInterface');
+        return $this->createMock('BadaBoom\ChainNode\ChainNodeInterface');
     }
 
     protected function createUserMock()
     {
-        return $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
+        return $this->createMock('Symfony\Component\Security\Core\User\UserInterface');
     }
 
     protected function createContextMock()
     {
-        return $this->getMock('BadaBoom\Context', array(), array(new \Exception));
+        return $this
+            ->getMockBuilder('BadaBoom\Context')
+            ->setConstructorArgs(array(new \Exception))
+            ->getMock();
     }
 }

@@ -5,6 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="fp_badaboom.class">Fp\BadaBoomBundle\FpBadaBoomBundle</parameter>
         <parameter key="fp_badaboom.normalizer.context.class">BadaBoom\Serializer\Normalizer\ContextNormalizer</parameter>
         <parameter key="fp_badaboom.encoder.text.class">BadaBoom\Serializer\Encoder\TextEncoder</parameter>
         <parameter key="fp_badaboom.encoder.line.class">BadaBoom\Serializer\Encoder\LineEncoder</parameter>
@@ -15,6 +16,10 @@
     </parameters>
 
     <services>
+        <defaults public="true"/>
+        <service id="fp_badaboom" class="%fp_badaboom.class%">
+            <tag name="fp_badaboom" />
+        </service>
         <service id="fp_badaboom.normalizer.context" class="%fp_badaboom.normalizer.context.class%">
             <tag name="fp_badaboom.normalizer" />
         </service>

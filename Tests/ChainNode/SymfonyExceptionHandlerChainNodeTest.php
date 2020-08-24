@@ -77,7 +77,7 @@ class SymfonyExceptionHandlerChainNodeTest extends \PHPUnit_Framework_TestCase
      */
     protected function createChainNodeMock()
     {
-        return $this->getMock('BadaBoom\ChainNode\ChainNodeInterface');
+        return $this->createMock('BadaBoom\ChainNode\ChainNodeInterface');
     }
 
     /**
