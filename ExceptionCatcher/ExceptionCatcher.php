@@ -27,7 +27,7 @@ class ExceptionCatcher implements ExceptionCatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function handleException(\Exception $e)
+    public function handleException(\Throwable $e)
     {
         foreach ($this->chainNodes as $chainNode) {
             $chainNode->handle(new Context($e));

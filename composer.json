@@ -22,8 +22,8 @@
         }        
     ],
     "require": {
-        "php": ">=5.3.2",
-        "fp/badaboom": "dev-ton",
+        "php": ">=7.0",
+        "fp/badaboom": "dev-upgrade-sf",
         "symfony/symfony": "^4.0"
     },
     "require-dev": {
