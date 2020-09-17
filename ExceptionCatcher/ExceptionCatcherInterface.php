@@ -17,11 +17,11 @@ interface ExceptionCatcherInterface
     function registerChainNode(ChainNodeInterface $chainNode);
     
     /**
-     * @param \Exception $e
+     * @param \Throwable $e
      * 
      * @return void
      */
-    function handleException(\Exception $e);
+    function handleException(\Throwable $e);
 
     /**
      * @return void
