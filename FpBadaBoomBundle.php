@@ -16,18 +16,12 @@ class FpBadaBoomBundle extends Bundle
     /**
      * @var ExceptionCatcher\ExceptionCatcherInterface
      */
-    protected $exceptionCatcher;
+    public static $exceptionCatcher;
 
     /**
      * @var ChainNode\ChainNodeManagerInterface
      */
-    protected $chainNodeManager;
-    
-    public function __construct(ExceptionCatcherInterface $exceptionCatcher = null, ChainNodeManagerInterface $chainNodeManager = null)
-    {
-        $this->exceptionCatcher = $exceptionCatcher;
-        $this->chainNodeManager = $chainNodeManager;
-    }
+    public static $chainNodeManager;
     
     /**
      * {@inheritdoc}
@@ -41,20 +35,20 @@ class FpBadaBoomBundle extends Bundle
         $badaBoomBundleDefinition->setSynthetic(true);
         $container->setDefinition('fp_badaboom', $badaBoomBundleDefinition);
         
-        if ($this->exceptionCatcher) { 
+        if (static::$exceptionCatcher) {
             $exceptionCatcherDefinition = new Definition();
             $exceptionCatcherDefinition->setClass('Fp\BadaBoomBundle\BadaBoomFactory');
-            $exceptionCatcherDefinition->setFactoryService('fp_badaboom');
-            $exceptionCatcherDefinition->setFactoryMethod('getExceptionCatcher');
+            $exceptionCatcherDefinition->setFactory([get_called_class(), 'getExceptionCatcher']);
+            $exceptionCatcherDefinition->setPublic(true);
             
             $container->setDefinition('fp_badaboom.exception_catcher', $exceptionCatcherDefinition);
         }
 
-        if ($this->chainNodeManager) {
+        if (static::$chainNodeManager) {
             $chainNodeManagerDefinition = new Definition();
             $chainNodeManagerDefinition->setClass('Fp\BadaBoomBundle\BadaBoomFactory');
-            $chainNodeManagerDefinition->setFactoryService('fp_badaboom');
-            $chainNodeManagerDefinition->setFactoryMethod('getChainNodeManager');
+            $chainNodeManagerDefinition->setFactory([get_called_class(), 'getChainNodeManager']);
+            $chainNodeManagerDefinition->setPublic(true);
 
             $container->setDefinition('fp_badaboom.chain_node_manager', $chainNodeManagerDefinition);
         }
@@ -67,17 +61,17 @@ class FpBadaBoomBundle extends Bundle
     /**
      * @return ExceptionCatcher\ExceptionCatcherInterface
      */
-    public function getExceptionCatcher()
+    public static function getExceptionCatcher()
     {
-        return $this->exceptionCatcher;
+        return static::$exceptionCatcher;
     }
 
     /**
      * @return ChainNode\ChainNodeManagerInterface
      */
-    public function getChainNodeManager()
+    public static function getChainNodeManager()
     {
-        return $this->chainNodeManager;
+        return static::$chainNodeManager;
     }
     
     public function boot()

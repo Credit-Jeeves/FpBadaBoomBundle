@@ -17,9 +17,6 @@
 
     <services>
         <defaults public="true"/>
-        <service id="fp_badaboom" class="%fp_badaboom.class%">
-            <tag name="fp_badaboom" />
-        </service>
         <service id="fp_badaboom.normalizer.context" class="%fp_badaboom.normalizer.context.class%">
             <tag name="fp_badaboom.normalizer" />
         </service>
