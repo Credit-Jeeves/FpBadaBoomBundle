@@ -23,7 +23,7 @@
     ],
     "require": {
         "php": ">=7.0",
-        "fp/badaboom": "dev-upgrade-sf",
+        "fp/badaboom": "dev-master2",
         "symfony/symfony": "^4.0"
     },
     "require-dev": {
