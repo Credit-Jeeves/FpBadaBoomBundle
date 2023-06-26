@@ -1,11 +1,11 @@
 <?php
-namespace Fp\BadaBoomBundle\Bridge\UniversalErrorCatcher;
 
-use Symfony\Component\Debug\DebugClassLoader;
+namespace Fp\BadaBoomBundle\Bridge\UniversalErrorCatcher;
 
 use Fp\BadaBoomBundle\ExceptionCatcher\ExceptionCatcherInterface;
 use BadaBoom\ChainNode\ChainNodeInterface;
 use BadaBoom\Context;
+use Symfony\Component\ErrorHandler\DebugClassLoader;
 
 /**
  * @author Kotlyar Maksim <kotlyar.maksim@gmail.com>
