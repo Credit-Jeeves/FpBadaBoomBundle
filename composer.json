@@ -24,11 +24,14 @@
     "require": {
         "php": ">=7.0",
         "fp/badaboom": "dev-master2",
-        "symfony/symfony": "^4.0"
+        "symfony/debug": "^4.0",
+        "symfony/framework-bundle": "^4.0",
+        "symfony/security-bundle": "^4.0",
+        "symfony/yaml": "^4.0",
+        "symfony/templating": "^4.0"
     },
     "require-dev": {
-        "fp/fumocker": "1.0.*",
-        "phpunit/phpunit": "^5.0"
+        "phpunit/phpunit": "^9.0"
     },
     "suggest": {
         "fp/universal-error-catcher": "As exceptions and recoverable\fatal errors catcher."  

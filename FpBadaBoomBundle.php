@@ -1,10 +1,10 @@
 <?php
+
 namespace Fp\BadaBoomBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-
 use Fp\BadaBoomBundle\DependencyInjection\Compiler\AddSerializerNormalizersPass;
 use Fp\BadaBoomBundle\DependencyInjection\Compiler\AddSerializerEncodersPass;
 use Fp\BadaBoomBundle\DependencyInjection\Compiler\AddChainNodesToManagerPass;
@@ -53,9 +53,9 @@ class FpBadaBoomBundle extends Bundle
             $container->setDefinition('fp_badaboom.chain_node_manager', $chainNodeManagerDefinition);
         }
 
-        $container->addCompilerPass(new AddSerializerNormalizersPass);
-        $container->addCompilerPass(new AddSerializerEncodersPass);
-        $container->addCompilerPass(new AddChainNodesToManagerPass);
+        $container->addCompilerPass(new AddSerializerNormalizersPass());
+        $container->addCompilerPass(new AddSerializerEncodersPass());
+        $container->addCompilerPass(new AddChainNodesToManagerPass());
     }
 
     /**

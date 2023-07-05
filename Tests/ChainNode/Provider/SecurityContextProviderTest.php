@@ -1,26 +1,26 @@
 <?php
+
 namespace Fp\BadaBoomBundle\Tests\ChainNode\Provider;
 
+use BadaBoom\ChainNode\ChainNodeInterface;
+use BadaBoom\ChainNode\Provider\AbstractProvider;
 use Fp\BadaBoomBundle\ChainNode\Provider\SecurityContextProvider;
 use BadaBoom\Context;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
+class SecurityContextProviderTest extends TestCase
 {
     /**
      * @test
      */
     public function shouldBeSubclassOfAbstractProvider()
     {
-        $rc = new \ReflectionClass('Fp\BadaBoomBundle\ChainNode\Provider\SecurityContextProvider');
-        $this->assertTrue($rc->isSubclassOf('BadaBoom\ChainNode\Provider\AbstractProvider'));
-    }
+        $rc = new \ReflectionClass(SecurityContextProvider::class);
 
-    /**
-     * @test
-     */
-    public function couldBeConstructedWithSecurityContextAsArgument()
-    {
-        new SecurityContextProvider($this->createTokenStorageMock());
+        $this->assertTrue($rc->isSubclassOf(AbstractProvider::class));
     }
 
     /**
@@ -31,10 +31,8 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
         $chain = new SecurityContextProvider($this->createTokenStorageMock());
 
         $contextMock = $this->createContextMock();
-        $contextMock
-            ->expects($this->never())
-            ->method('setVar')
-        ;
+        $contextMock->expects($this->never())
+            ->method('setVar');
 
         $chain->handle($contextMock);
     }
@@ -49,11 +47,9 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
         $chain = new SecurityContextProvider($this->createTokenStorageMock());
 
         $nextChainNodeMock = $this->createChainNodeMock();
-        $nextChainNodeMock
-            ->expects($this->once())
+        $nextChainNodeMock->expects($this->once())
             ->method('handle')
-            ->with($context)
-        ;
+            ->with($context);
 
         $chain->nextNode($nextChainNodeMock);
 
@@ -72,18 +68,15 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $tokenMock = $this->createTokenMock();
-        $tokenMock
-            ->expects($this->once())
+        $tokenMock->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue($expectedUser))
-        ;
+            ->willReturn($expectedUser);
 
         $securityContextMock = $this->createTokenStorageMock();
         $securityContextMock
             ->expects($this->once())
             ->method('getToken')
-            ->will($this->returnValue($tokenMock))
-        ;
+            ->willReturn($tokenMock);
 
         $contextMock = $this->createContextMock();
         $contextMock
@@ -109,27 +102,22 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
         $expectedUser = 'the user';
 
         $tokenMock = $this->createTokenMock();
-        $tokenMock
-            ->expects($this->once())
+        $tokenMock->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue($expectedUser))
-        ;
+            ->willReturn($expectedUser);
 
         $securityContextMock = $this->createTokenStorageMock();
         $securityContextMock
             ->expects($this->once())
             ->method('getToken')
-            ->will($this->returnValue($tokenMock))
-        ;
+            ->willReturn($tokenMock);
 
         $contextMock = $this->createContextMock();
-        $contextMock
-            ->expects($this->once())
+        $contextMock->expects($this->once())
             ->method('setVar')
             ->with(
                 $this->equalTo($expectedCustomSection)
-            )
-        ;
+            );
 
         $chain = new SecurityContextProvider($securityContextMock, $expectedCustomSection);
 
@@ -145,39 +133,31 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
 
         $expectedUsername = 'the user object username';
         $expectedUser = $this->createUserMock();
-        $expectedUser
-            ->expects($this->once())
+        $expectedUser->expects($this->once())
             ->method('getUsername')
-            ->will($this->returnValue($expectedUsername))
-        ;
+            ->willReturn($expectedUsername);
 
         $expectedUserData = array(
             'user' => $expectedUsername
         );
 
         $tokenMock = $this->createTokenMock();
-        $tokenMock
-            ->expects($this->once())
+        $tokenMock->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue($expectedUser))
-        ;
+            ->willReturn($expectedUser);
 
         $securityContextMock = $this->createTokenStorageMock();
-        $securityContextMock
-            ->expects($this->once())
+        $securityContextMock->expects($this->once())
             ->method('getToken')
-            ->will($this->returnValue($tokenMock))
-        ;
+            ->willReturn($tokenMock);
 
         $contextMock = $this->createContextMock();
-        $contextMock
-            ->expects($this->once())
+        $contextMock->expects($this->once())
             ->method('setVar')
             ->with(
                 $this->equalTo($expectedDefaultSection),
                 $this->equalTo($expectedUserData)
-            )
-        ;
+            );
 
         $chain = new SecurityContextProvider($securityContextMock);
 
@@ -193,27 +173,21 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
         $expectedUser = $this->createUserMock();
 
         $tokenMock = $this->createTokenMock();
-        $tokenMock
-            ->expects($this->once())
+        $tokenMock->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue($expectedUser))
-        ;
+            ->willReturn($expectedUser);
 
         $securityContextMock = $this->createTokenStorageMock();
-        $securityContextMock
-            ->expects($this->once())
+        $securityContextMock->expects($this->once())
             ->method('getToken')
-            ->will($this->returnValue($tokenMock))
-        ;
+            ->willReturn($tokenMock);
 
         $contextMock = $this->createContextMock();
-        $contextMock
-            ->expects($this->once())
+        $contextMock->expects($this->once())
             ->method('setVar')
             ->with(
                 $this->equalTo($expectedCustomSection)
-            )
-        ;
+            );
 
         $chain = new SecurityContextProvider($securityContextMock, $expectedCustomSection);
 
@@ -222,28 +196,27 @@ class SecurityContextProviderTest extends \PHPUnit_Framework_TestCase
 
     protected function createTokenStorageMock()
     {
-        return $this->createMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        return $this->createMock(TokenStorageInterface::class);
     }
 
     protected function createTokenMock()
     {
-        return $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        return $this->createMock(TokenInterface::class);
     }
 
     protected function createChainNodeMock()
     {
-        return $this->createMock('BadaBoom\ChainNode\ChainNodeInterface');
+        return $this->createMock(ChainNodeInterface::class);
     }
 
     protected function createUserMock()
     {
-        return $this->createMock('Symfony\Component\Security\Core\User\UserInterface');
+        return $this->createMock(UserInterface::class);
     }
 
     protected function createContextMock()
     {
-        return $this
-            ->getMockBuilder('BadaBoom\Context')
+        return $this->getMockBuilder(Context::class)
             ->setConstructorArgs(array(new \Exception))
             ->getMock();
     }

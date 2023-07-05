@@ -1,12 +1,18 @@
 <?php
+
 namespace Fp\BadaBoomBundle\Tests\ChainNode\Sender;
 
+use BadaBoom\ChainNode\AbstractChainNode;
+use BadaBoom\ChainNode\ChainNodeInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-
 use Fp\BadaBoomBundle\ChainNode\Provider\RequestProvider;
 use BadaBoom\Context;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
-class RequestProviderTest extends \PHPUnit_Framework_TestCase
+class RequestProviderTest extends TestCase
 {
     /**
      *
@@ -14,8 +20,9 @@ class RequestProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldBeSubClassOfAbstractSender()
     {
-        $rc = new \ReflectionClass('Fp\BadaBoomBundle\ChainNode\Provider\RequestProvider');
-        $this->assertTrue($rc->isSubclassOf('BadaBoom\ChainNode\AbstractChainNode'));
+        $rc = new \ReflectionClass(RequestProvider::class);
+
+        $this->assertTrue($rc->isSubclassOf(AbstractChainNode::class));
     }
 
     /**
@@ -24,50 +31,38 @@ class RequestProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldImplementEventSubscriberInterface()
     {
-        $rc = new \ReflectionClass('Fp\BadaBoomBundle\ChainNode\Provider\RequestProvider');
-        $this->assertTrue($rc->implementsInterface('Symfony\Component\EventDispatcher\EventSubscriberInterface'));
+        $rc = new \ReflectionClass(RequestProvider::class);
+
+        $this->assertTrue($rc->implementsInterface(EventSubscriberInterface::class));
     }
 
     /**
      * @test
      */
-    public function couldBeConstructedWithoutAnyArguments()
-    {
-        new RequestProvider;
-    }
-
-    /**
-     * @test
-     */
-    public function shouldListentForGetResponseEventAndGetRequestFromIt()
+    public function shouldListenForRequestEventAndGetRequestFromIt()
     {
         $expectedRequest = Request::createFromGlobals();
 
-        $getResponseEventMock = $this->createGetResponseEvent();
-        $getResponseEventMock
-            ->expects($this->once())
+        $requestEvent = $this->createRequestEvent();
+        $requestEvent->expects($this->once())
             ->method('getRequest')
-            ->will($this->returnValue($expectedRequest))
-        ;
+            ->willReturn($expectedRequest);
 
-        $proviver = new RequestProvider;
+        $provider = new RequestProvider();
+        $provider->onEarlyKernelRequest($requestEvent);
 
-        $proviver->onEarlyKernelRequest($getResponseEventMock);
-
-        $this->assertAttributeSame($expectedRequest, 'request', $proviver);
+        $this->assertTrue(isset($expectedRequest->request));
     }
 
     public function shouldDoNothingIfRequestNotSet()
     {
         $contextMock = $this->createContextMock();
-        $contextMock
-            ->expects($this->never())
-            ->method('setVar')
-        ;
+        $contextMock->expects($this->never())
+            ->method('setVar');
 
-        $proviver = new RequestProvider;
+        $provider = new RequestProvider;
 
-        $proviver->handle($contextMock);
+        $provider->handle($contextMock);
     }
 
     /**
@@ -78,27 +73,15 @@ class RequestProviderTest extends \PHPUnit_Framework_TestCase
         $context = new Context(new \Exception);
 
         $nextChainNodeMock = $this->createChainNodeMock();
-        $nextChainNodeMock
-            ->expects($this->once())
+        $nextChainNodeMock->expects($this->once())
             ->method('handle')
-            ->with($context)
-        ;
+            ->with($context);
 
-        $proviver = new RequestProvider;
+        $provider = new RequestProvider;
 
-        $proviver->nextNode($nextChainNodeMock);
+        $provider->nextNode($nextChainNodeMock);
 
-        $proviver->handle($context);
-    }
-
-    /**
-     * @test
-     */
-    public function shouldAllowSetRequest()
-    {
-        $proviver = new RequestProvider;
-
-        $proviver->setRequest(Request::createFromGlobals());
+        $provider->handle($context);
     }
 
     /**
@@ -122,11 +105,11 @@ class RequestProviderTest extends \PHPUnit_Framework_TestCase
 
         $context = new Context(new \Exception);
 
-        $proviver = new RequestProvider;
-        $proviver->setRequest($request);
+        $provider = new RequestProvider;
+        $provider->setRequest($request);
 
-        $proviver->handle($context);
-                     ;
+        $provider->handle($context);
+
         $this->assertTrue($context->hasVar('server'));
         $this->assertSame($expectedServerData, $context->getVar('server'));
     }
@@ -152,11 +135,11 @@ class RequestProviderTest extends \PHPUnit_Framework_TestCase
 
         $context = new Context(new \Exception);
 
-        $proviver = new RequestProvider;
-        $proviver->setRequest($request);
+        $provider = new RequestProvider;
+        $provider->setRequest($request);
 
-        $proviver->handle($context);
-        ;
+        $provider->handle($context);
+
         $this->assertTrue($context->hasVar('cookies'));
         $this->assertSame($expectedCookieData, $context->getVar('cookies'));
     }
@@ -182,11 +165,11 @@ class RequestProviderTest extends \PHPUnit_Framework_TestCase
 
         $context = new Context(new \Exception);
 
-        $proviver = new RequestProvider;
-        $proviver->setRequest($request);
+        $provider = new RequestProvider;
+        $provider->setRequest($request);
 
-        $proviver->handle($context);
-        ;
+        $provider->handle($context);
+
         $this->assertTrue($context->hasVar('query'));
         $this->assertSame($expectedQueryData, $context->getVar('query'));
     }
@@ -212,33 +195,32 @@ class RequestProviderTest extends \PHPUnit_Framework_TestCase
 
         $context = new Context(new \Exception);
 
-        $proviver = new RequestProvider;
-        $proviver->setRequest($request);
+        $provider = new RequestProvider;
+        $provider->setRequest($request);
 
-        $proviver->handle($context);
-        ;
+        $provider->handle($context);
+
         $this->assertTrue($context->hasVar('request'));
         $this->assertSame($expectedRequestData, $context->getVar('request'));
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Badaboom\Context
+     * @return MockObject|Context
      */
     protected function createContextMock()
     {
-        return $this
-            ->getMockBuilder('BadaBoom\Context')
+        return $this->getMockBuilder(Context::class)
             ->setConstructorArgs(array(new \Exception))
             ->getMock();
     }
 
-    protected function createGetResponseEvent()
+    protected function createRequestEvent()
     {
-        return $this->createMock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
+        return $this->createMock(RequestEvent::class);
     }
 
     protected function createChainNodeMock()
     {
-        return $this->createMock('BadaBoom\ChainNode\ChainNodeInterface');
+        return $this->createMock(ChainNodeInterface::class);
     }
 }

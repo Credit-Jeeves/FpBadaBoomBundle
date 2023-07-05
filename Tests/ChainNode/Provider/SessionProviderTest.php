@@ -1,29 +1,29 @@
 <?php
+
 namespace Fp\BadaBoomBundle\Tests\ChainNode\Provider;
 
+use BadaBoom\ChainNode\ChainNodeInterface;
+use BadaBoom\ChainNode\Provider\AbstractProvider;
+use BadaBoom\Context;
 use Fp\BadaBoomBundle\ChainNode\Provider\SessionProvider;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @author Kotlyar Maksim <kotlyar.maksim@gmail.com>
  * @since 4/10/12
  */
-class SessionProviderTest extends \PHPUnit_Framework_TestCase
+class SessionProviderTest extends TestCase
 {
     /**
      * @test
      */
     public function shouldBeSubclassOfAbstractProvider()
     {
-        $rc = new \ReflectionClass('Fp\BadaBoomBundle\ChainNode\Provider\SessionProvider');
-        $this->assertTrue($rc->isSubclassOf('BadaBoom\ChainNode\Provider\AbstractProvider'));
-    }
+        $rc = new \ReflectionClass(SessionProvider::class);
 
-    /**
-     * @test
-     */
-    public function couldBeConstructedWithSecurityContextAsArgument()
-    {
-        new SessionProvider($this->createSessionMock());
+        $this->assertTrue($rc->isSubclassOf(AbstractProvider::class));
     }
 
     /**
@@ -38,21 +38,17 @@ class SessionProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $sessionMock = $this->createSessionMock();
-        $sessionMock
-            ->expects($this->once())
+        $sessionMock->expects($this->once())
             ->method('all')
-            ->will($this->returnValue($expectedSessionData))
-        ;
+            ->willReturn($expectedSessionData);
 
         $contextMock = $this->createContextMock();
-        $contextMock
-            ->expects($this->once())
+        $contextMock->expects($this->once())
             ->method('setVar')
             ->with(
                 $this->equalTo('session'),
                 $this->equalTo($expectedSessionData)
-            )
-        ;
+            );
 
         $sessionProvider = new SessionProvider($sessionMock);
 
@@ -67,13 +63,11 @@ class SessionProviderTest extends \PHPUnit_Framework_TestCase
         $expectedCustomSectionName = 'custom_section_name';
 
         $contextMock = $this->createContextMock();
-        $contextMock
-            ->expects($this->once())
+        $contextMock->expects($this->once())
             ->method('setVar')
             ->with(
                 $this->equalTo($expectedCustomSectionName)
-            )
-        ;
+            );
 
         $sessionProvider = new SessionProvider(
             $this->createSessionMock(),
@@ -91,11 +85,9 @@ class SessionProviderTest extends \PHPUnit_Framework_TestCase
         $context = $this->createContextMock();
 
         $nextChainNodeMock = $this->createChainNodeMock();
-        $nextChainNodeMock
-            ->expects($this->once())
+        $nextChainNodeMock->expects($this->once())
             ->method('handle')
-            ->with($context)
-        ;
+            ->with($context);
 
         $sessionProvider = new SessionProvider($this->createSessionMock());
 
@@ -105,29 +97,28 @@ class SessionProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\HttpFoundation\Session\SessionInterface
+     * @return MockObject|SessionInterface
      */
     protected function createSessionMock()
     {
-        return $this->createMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
+        return $this->createMock(SessionInterface::class);
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Badaboom\Context
+     * @return MockObject|Context
      */
     protected function createContextMock()
     {
-        return $this
-            ->getMockBuilder('BadaBoom\Context')
+        return $this->getMockBuilder(Context::class)
             ->setConstructorArgs(array(new \Exception))
             ->getMock();
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\BadaBoom\ChainNode\ChainNodeInterface
+     * @return MockObject|ChainNodeInterface
      */
     protected function createChainNodeMock()
     {
-        return $this->createMock('BadaBoom\ChainNode\ChainNodeInterface');
+        return $this->createMock(ChainNodeInterface::class);
     }
 }
