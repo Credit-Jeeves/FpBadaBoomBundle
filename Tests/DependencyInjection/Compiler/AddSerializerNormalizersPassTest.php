@@ -1,39 +1,30 @@
 <?php
+
 namespace Fp\BadaBoomBundle\Tests\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-
 use Fp\BadaBoomBundle\DependencyInjection\Compiler\AddSerializerNormalizersPass;
 
-class AddSerializerNormalizersPassTest extends \PHPUnit_Framework_TestCase
+class AddSerializerNormalizersPassTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function couldBeConstructedWithoutAnyArguments()
-    {
-        new AddSerializerNormalizersPass();
-    }
-
     /**
      * @test
      */
     public function shouldFindFpBadaBoomNormalizerTags()
     {
         $containerBuilderMock = $this->createContainerBuilderMock();
-        $containerBuilderMock
-            ->expects($this->once())
+        $containerBuilderMock->expects($this->once())
             ->method('findTaggedServiceIds')
             ->with(
                 $this->equalTo('fp_badaboom.normalizer')
             )
-            ->will($this->returnValue(array()))
-        ;
-        $containerBuilderMock
-            ->expects($this->any())
+            ->willReturn(array());
+        $containerBuilderMock->expects($this->any())
             ->method('getDefinition')
-            ->will($this->returnValue($this->createDefinitionMock()))
-        ;
+            ->willReturn($this->createDefinitionMock());
 
         $pass = new AddSerializerNormalizersPass();
         $pass->process($containerBuilderMock);
@@ -55,26 +46,20 @@ class AddSerializerNormalizersPassTest extends \PHPUnit_Framework_TestCase
         );
 
         $serializerDefinitionMock = $this->createDefinitionMock();
-        $serializerDefinitionMock
-            ->expects($this->once())
+        $serializerDefinitionMock->expects($this->once())
             ->method('replaceArgument')
             ->with(
                 $this->equalTo($firstArgument = 0),
                 $this->equalTo($expectedNormalizers)
-            )
-        ;
+            );
 
         $containerBuilderMock = $this->createContainerBuilderMock();
-        $containerBuilderMock
-            ->expects($this->once())
+        $containerBuilderMock->expects($this->once())
             ->method('findTaggedServiceIds')
-            ->will($this->returnValue($tags))
-        ;
-        $containerBuilderMock
-            ->expects($this->once())
+            ->willReturn($tags);
+        $containerBuilderMock->expects($this->once())
             ->method('getDefinition')
-            ->will($this->returnValue($serializerDefinitionMock))
-        ;
+            ->willReturn($serializerDefinitionMock);
 
         $pass = new AddSerializerNormalizersPass();
         $pass->process($containerBuilderMock);
@@ -83,7 +68,7 @@ class AddSerializerNormalizersPassTest extends \PHPUnit_Framework_TestCase
     protected function createContainerBuilderMock()
     {
         return $this->createPartialMock(
-            'Symfony\Component\DependencyInjection\ContainerBuilder',
+            ContainerBuilder::class,
             array('findTaggedServiceIds', 'getDefinition')
         );
     }
@@ -91,7 +76,7 @@ class AddSerializerNormalizersPassTest extends \PHPUnit_Framework_TestCase
     protected function createDefinitionMock()
     {
         return $this->createPartialMock(
-            'Symfony\Component\DependencyInjection\Definition',
+            Definition::class,
             array('replaceArgument')
         );
     }

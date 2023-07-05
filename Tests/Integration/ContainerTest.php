@@ -1,11 +1,19 @@
 <?php
+
 namespace Fp\BadaBoomBundle\Tests\Integration;
 
-class ContainerTest extends \PHPUnit_Framework_TestCase
-{
-    public static $container;
+use BadaBoom\Context;
+use BadaBoom\Serializer\Encoder\TextEncoder;
+use BadaBoom\Serializer\Normalizer\ContextNormalizer;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
-    public static function setUpBeforeClass()
+class ContainerTest extends TestCase
+{
+    public static ContainerInterface $container;
+
+    public static function setUpBeforeClass(): void
     {
         require_once __DIR__ . '/app/AppKernel.php';
 
@@ -22,7 +30,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         $contextNormalizer = self::$container->get('fp_badaboom.normalizer.context');
 
-        $this->assertInstanceOf('BadaBoom\Serializer\Normalizer\ContextNormalizer', $contextNormalizer);
+        $this->assertInstanceOf(ContextNormalizer::class, $contextNormalizer);
     }
 
     /**
@@ -32,7 +40,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         $textEncoder = self::$container->get('fp_badaboom.encoder.text');
 
-        $this->assertInstanceOf('BadaBoom\Serializer\Encoder\TextEncoder', $textEncoder);
+        $this->assertInstanceOf(TextEncoder::class, $textEncoder);
     }
 
     /**
@@ -42,7 +50,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         $serializer = self::$container->get('fp_badaboom.serializer');
 
-        $this->assertInstanceOf('Symfony\Component\Serializer\Serializer', $serializer);
+        $this->assertInstanceOf(SerializerInterface::class, $serializer);
     }
 
     /**
@@ -78,7 +86,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     protected function createContextMock()
     {
         return $this
-            ->getMockBuilder('BadaBoom\Context')
+            ->getMockBuilder(Context::class)
             ->setConstructorArgs(array(new \Exception))
             ->getMock();
     }

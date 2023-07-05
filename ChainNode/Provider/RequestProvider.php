@@ -3,10 +3,8 @@ namespace Fp\BadaBoomBundle\ChainNode\Provider;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpFoundation\Request;
-
 use BadaBoom\ChainNode\AbstractChainNode;
 use BadaBoom\Context;
 
@@ -30,7 +28,7 @@ class RequestProvider extends AbstractChainNode implements EventSubscriberInterf
         $this->handleNextNode($context);
     }
 
-    public function onEarlyKernelRequest(GetResponseEvent $event)
+    public function onEarlyKernelRequest(RequestEvent $event)
     {
         $this->setRequest($event->getRequest());
     }

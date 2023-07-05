@@ -1,20 +1,15 @@
 <?php
+
 namespace Fp\BadaBoomBundle\Tests\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-
 use Fp\BadaBoomBundle\DependencyInjection\Compiler\AddSerializerEncodersPass;
 
-class AddSerializerEncoderPassTest extends \PHPUnit_Framework_TestCase
+class AddSerializerEncoderPassTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function couldBeConstructedWithoutAnyArguments()
-    {
-        new AddSerializerEncodersPass();
-    }
-
     /**
      * @test
      */
@@ -27,13 +22,12 @@ class AddSerializerEncoderPassTest extends \PHPUnit_Framework_TestCase
             ->with(
                 $this->equalTo('fp_badaboom.encoder')
             )
-            ->will($this->returnValue(array()))
-        ;
+            ->willReturn(array());
+
         $containerBuilderMock
             ->expects($this->any())
             ->method('getDefinition')
-            ->will($this->returnValue($this->createDefinitionMock()))
-        ;
+            ->willReturn($this->createDefinitionMock());
 
         $pass = new AddSerializerEncodersPass();
         $pass->process($containerBuilderMock);
@@ -61,20 +55,15 @@ class AddSerializerEncoderPassTest extends \PHPUnit_Framework_TestCase
             ->with(
                 $this->equalTo($secondArgument = 1),
                 $this->equalTo($expectedEncoders)
-            )
-        ;
+            );
 
         $containerBuilderMock = $this->createContainerBuilderMock();
-        $containerBuilderMock
-            ->expects($this->once())
+        $containerBuilderMock->expects($this->once())
             ->method('findTaggedServiceIds')
-            ->will($this->returnValue($tags))
-        ;
-        $containerBuilderMock
-            ->expects($this->once())
+            ->willReturn($tags);
+        $containerBuilderMock->expects($this->once())
             ->method('getDefinition')
-            ->will($this->returnValue($serializerDefinitionMock))
-        ;
+            ->willReturn($serializerDefinitionMock);
 
         $pass = new AddSerializerEncodersPass();
         $pass->process($containerBuilderMock);
@@ -83,7 +72,7 @@ class AddSerializerEncoderPassTest extends \PHPUnit_Framework_TestCase
     protected function createContainerBuilderMock()
     {
         return $this->createPartialMock(
-            'Symfony\Component\DependencyInjection\ContainerBuilder',
+            ContainerBuilder::class,
             array('findTaggedServiceIds', 'getDefinition')
         );
     }
@@ -91,7 +80,7 @@ class AddSerializerEncoderPassTest extends \PHPUnit_Framework_TestCase
     protected function createDefinitionMock()
     {
         return $this->createPartialMock(
-            'Symfony\Component\DependencyInjection\Definition',
+            Definition::class,
             array('replaceArgument')
         );
     }

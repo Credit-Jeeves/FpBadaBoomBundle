@@ -1,54 +1,40 @@
 <?php
+
 namespace Fp\BadaBoomBundle\Tests\ChainNode\Sender;
 
+use BadaBoom\ChainNode\AbstractChainNode;
+use BadaBoom\ChainNode\ChainNodeInterface;
 use Fp\BadaBoomBundle\ChainNode\SymfonyExceptionHandlerChainNode;
 use BadaBoom\Context;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Kotlyar Maksim <kotlyar.maksim@gmail.com>
  * @since 4/10/12
  */
-class SymfonyExceptionHandlerChainNodeTest extends \PHPUnit_Framework_TestCase
+class SymfonyExceptionHandlerChainNodeTest extends TestCase
 {
-    protected $fumocker;
-    
-    public function setUp()
+    public function setUp(): void
     {
-        $this->fumocker = new \Fumocker\Fumocker();
-
-        $mock = $this->fumocker->getMock('Fp\BadaBoomBundle\ChainNode', 'php_sapi_name');
-        $mock
-            ->expects($this->any())
-            ->method('php_sapi_name')
-            ->will($this->returnValue('not-a-cli'))
-        ;
-        
         ob_start();
     }
-    
-    public function tearDown()
+
+    public function tearDown(): void
     {
-        $this->fumocker->cleanup();
-        
+        ob_end_flush();
         ob_clean();
+
     }
-    
+
     /**
      * @test
      */
     public function shouldBeSubClassOfAbstractSender()
     {
-        $rc = new \ReflectionClass('Fp\BadaBoomBundle\ChainNode\SymfonyExceptionHandlerChainNode');
-        
-        $this->assertTrue($rc->isSubclassOf('BadaBoom\ChainNode\AbstractChainNode'));
-    }
+        $rc = new \ReflectionClass(SymfonyExceptionHandlerChainNode::class);
 
-    /**
-     * @test
-     */
-    public function couldBeConstructedWithExceptionHandlerAsArgument()
-    {
-        new SymfonyExceptionHandlerChainNode($debug = true);
+        $this->assertTrue($rc->isSubclassOf(AbstractChainNode::class));
     }
 
     /**
@@ -59,11 +45,9 @@ class SymfonyExceptionHandlerChainNodeTest extends \PHPUnit_Framework_TestCase
         $context = new Context(new \Exception());
 
         $nextChainNodeMock = $this->createChainNodeMock();
-        $nextChainNodeMock
-            ->expects($this->once())
+        $nextChainNodeMock->expects($this->once())
             ->method('handle')
-            ->with($context)
-        ;
+            ->with($context);
 
         $sender = new SymfonyExceptionHandlerChainNode($debug = true);
 
@@ -73,18 +57,10 @@ class SymfonyExceptionHandlerChainNodeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\BadaBoom\ChainNode\ChainNodeInterface
+     * @return MockObject|ChainNodeInterface
      */
     protected function createChainNodeMock()
     {
-        return $this->createMock('BadaBoom\ChainNode\ChainNodeInterface');
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\HttpKernel\Debug\ExceptionHandler
-     */
-    protected function createExceptionHandlerMock()
-    {
-        return $this->getMock('Symfony\Component\HttpKernel\Debug\ExceptionHandler', array('handle'));
+        return $this->createMock(ChainNodeInterface::class);
     }
 }
