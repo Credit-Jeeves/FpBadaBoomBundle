@@ -1,8 +1,6 @@
 framework:
-    secret:                                               sdkfj
-    test:                                                 true
-    router:                                               { resource: "%kernel.root_dir%/config/routing.yml" }
-    templating:
-        engines:                                          [ 'php' ]
+    secret: sdkfj
+    test: true
+    router: { resource: "%kernel.project_dir%%/config/routing.yml" }
     session:
-        storage_id:                                       session.storage.filesystem
+        storage_factory_id: session.storage.factory.native
