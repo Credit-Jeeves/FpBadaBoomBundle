@@ -10,7 +10,7 @@ class AppKernel extends Kernel
         parent::__construct($environment = 'test', $debug = true);
     }
 
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         $bundles = array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
@@ -20,12 +20,12 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return sys_get_temp_dir();
     }
 
-    public function getLogDir()
+    public function getLogDir(): string
     {
         return sys_get_temp_dir();
     }

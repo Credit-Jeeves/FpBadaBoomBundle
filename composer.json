@@ -23,12 +23,12 @@
     ],
     "require": {
         "php": ">=7.0",
-        "fp/badaboom": "dev-master2",
-        "symfony/debug": "^4.0",
-        "symfony/framework-bundle": "^4.0",
-        "symfony/security-bundle": "^4.0",
-        "symfony/yaml": "^4.0",
-        "symfony/templating": "^4.0"
+        "fp/badaboom": "dev-upgrade_sf6",
+        "symfony/error-handler": "^6.0",
+        "symfony/framework-bundle": "^6.0",
+        "symfony/security-bundle": "^6.0",
+        "symfony/yaml": "^6.0",
+        "symfony/templating": "^6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0"

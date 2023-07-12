@@ -62,9 +62,17 @@ class SecurityContextProviderTest extends TestCase
     public function shouldAddUserInformationIfContextHaveTokenWithUserAsString()
     {
         $expectedDefaultSection = 'security';
-        $expectedUser = 'the user';
+        $expectedUser = $this
+            ->getMockBuilder(UserInterface::class)
+            ->disableOriginalConstructor()
+            ->addMethods(['getUsername'])
+            ->getMockForAbstractClass();
+        $expectedUser
+            ->expects($this->once())
+            ->method('getUsername')
+            ->willReturn($expectedUserName = 'expected_user');
         $expectedUserData = array(
-            'user' => $expectedUser
+            'user' => $expectedUserName
         );
 
         $tokenMock = $this->createTokenMock();
@@ -99,7 +107,11 @@ class SecurityContextProviderTest extends TestCase
     public function shouldAddUserInformationToCustomSectionIfContextHaveTokenWithUserAsString()
     {
         $expectedCustomSection = 'custom_security_section';
-        $expectedUser = 'the user';
+        $expectedUser = $this
+            ->getMockBuilder(UserInterface::class)
+            ->disableOriginalConstructor()
+            ->addMethods(['getUsername'])
+            ->getMockForAbstractClass();
 
         $tokenMock = $this->createTokenMock();
         $tokenMock->expects($this->once())
@@ -131,11 +143,15 @@ class SecurityContextProviderTest extends TestCase
     {
         $expectedDefaultSection = 'security';
 
-        $expectedUsername = 'the user object username';
-        $expectedUser = $this->createUserMock();
-        $expectedUser->expects($this->once())
+        $expectedUser = $this
+            ->getMockBuilder(UserInterface::class)
+            ->disableOriginalConstructor()
+            ->addMethods(['getUsername'])
+            ->getMockForAbstractClass();
+        $expectedUser
+            ->expects($this->once())
             ->method('getUsername')
-            ->willReturn($expectedUsername);
+            ->willReturn($expectedUsername = 'expected_user');
 
         $expectedUserData = array(
             'user' => $expectedUsername
@@ -170,7 +186,11 @@ class SecurityContextProviderTest extends TestCase
     public function shouldAddUserInformationToCustomSectionIfContextHaveTokenWithUserInterface()
     {
         $expectedCustomSection = 'custom_security_section';
-        $expectedUser = $this->createUserMock();
+        $expectedUser = $this
+            ->getMockBuilder(UserInterface::class)
+            ->disableOriginalConstructor()
+            ->addMethods(['getUsername'])
+            ->getMockForAbstractClass();
 
         $tokenMock = $this->createTokenMock();
         $tokenMock->expects($this->once())
