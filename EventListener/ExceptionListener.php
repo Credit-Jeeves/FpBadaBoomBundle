@@ -1,30 +1,18 @@
 <?php
 namespace Fp\BadaBoomBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 use Fp\BadaBoomBundle\ExceptionCatcher\ExceptionCatcherInterface;
 
 class ExceptionListener
 {
-    /**
-     * @var \Fp\BadaBoomBundle\ExceptionCatcher\ExceptionCatcherInterface
-     */
-    protected $exceptionCatcher;
-
-    /**
-     * @param \Fp\BadaBoomBundle\ExceptionCatcher\ExceptionCatcherInterface $exceptionCatcher
-     */
-    public function __construct(ExceptionCatcherInterface $exceptionCatcher)
+    public function __construct(protected ExceptionCatcherInterface $exceptionCatcher)
     {
-        $this->exceptionCatcher = $exceptionCatcher;
     }
 
-    /**
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-     */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event): void
     {
-        $this->exceptionCatcher->handleException($event->getException());
+        $this->exceptionCatcher->handleException($event->getThrowable());
     }
 }

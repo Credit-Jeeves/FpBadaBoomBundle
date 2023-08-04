@@ -13,9 +13,9 @@ use Symfony\Component\ErrorHandler\DebugClassLoader;
  */
 class ExceptionCatcher extends \UniversalErrorCatcher_Catcher implements ExceptionCatcherInterface
 {
-    private $chainNodes = array();
+    private array $chainNodes = array();
     
-    public function registerChainNode(ChainNodeInterface $chainNode)
+    public function registerChainNode(ChainNodeInterface $chainNode): void
     {
         if (in_array($chainNode, $this->chainNodes, $strict = true)) {
             return;
@@ -28,7 +28,7 @@ class ExceptionCatcher extends \UniversalErrorCatcher_Catcher implements Excepti
         });
     }
     
-    public function start($debug = false)
+    public function start($debug = false): void
     {
         if ($this->isStarted) {
             return;

@@ -9,22 +9,9 @@ use BadaBoom\ChainNode\ChainNodeInterface;
  */
 interface ExceptionCatcherInterface
 {
-    /**
-     * @param \BadaBoom\ChainNode\ChainNodeInterface $chainNode
-     * 
-     * @return void
-     */
-    function registerChainNode(ChainNodeInterface $chainNode);
+    function registerChainNode(ChainNodeInterface $chainNode): void;
     
-    /**
-     * @param \Throwable $e
-     * 
-     * @return void
-     */
-    function handleException(\Throwable $e);
+    function handleException(\Throwable $e): void;
 
-    /**
-     * @return void
-     */
-    function start($debug = false);
+    function start($debug = false): void;
 }

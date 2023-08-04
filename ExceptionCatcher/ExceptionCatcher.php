@@ -10,12 +10,9 @@ use BadaBoom\Context;
  */
 class ExceptionCatcher implements ExceptionCatcherInterface
 {
-    protected $chainNodes = array();
+    protected array $chainNodes = array();
     
-    /**
-     * {@inheritdoc}
-     */
-    public function registerChainNode(ChainNodeInterface $chainNode)
+    public function registerChainNode(ChainNodeInterface $chainNode): void
     {
         if (in_array($chainNode, $this->chainNodes, $strict = true)) {
             return;
@@ -24,20 +21,14 @@ class ExceptionCatcher implements ExceptionCatcherInterface
         $this->chainNodes[] = $chainNode;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function handleException(\Throwable $e)
+    public function handleException(\Throwable $e): void
     {
         foreach ($this->chainNodes as $chainNode) {
             $chainNode->handle(new Context($e));
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function start($debug = false)
+    public function start($debug = false): void
     {
         //Basic implementation does not set any handlers. 
         //It uses symfony's exception event to handle exception.
