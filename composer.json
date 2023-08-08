@@ -22,7 +22,7 @@
         }        
     ],
     "require": {
-        "php": ">=7.0",
+        "php": ">=8.1",
         "fp/badaboom": "dev-upgrade_sf6",
         "symfony/error-handler": "^6.0",
         "symfony/framework-bundle": "^6.0",
