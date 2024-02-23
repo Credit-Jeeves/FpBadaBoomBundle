@@ -43,3 +43,5 @@ composer.phar
 vendor/
 
 #### PhpStorm #### 
+
+!/.gitlab-ci.yml
