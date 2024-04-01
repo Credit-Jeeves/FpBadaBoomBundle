@@ -26,7 +26,7 @@ class FpBadaBoomBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
@@ -61,7 +61,7 @@ class FpBadaBoomBundle extends Bundle
     /**
      * @return ExceptionCatcher\ExceptionCatcherInterface
      */
-    public static function getExceptionCatcher()
+    public static function getExceptionCatcher(): ExceptionCatcherInterface
     {
         return static::$exceptionCatcher;
     }
@@ -69,12 +69,12 @@ class FpBadaBoomBundle extends Bundle
     /**
      * @return ChainNode\ChainNodeManagerInterface
      */
-    public static function getChainNodeManager()
+    public static function getChainNodeManager(): ChainNodeManagerInterface
     {
         return static::$chainNodeManager;
     }
     
-    public function boot()
+    public function boot(): void
     {
         /** @var $exceptionCatcher ExceptionCatcherInterface */
         $exceptionCatcher = $this->container->get('fp_badaboom.exception_catcher');
